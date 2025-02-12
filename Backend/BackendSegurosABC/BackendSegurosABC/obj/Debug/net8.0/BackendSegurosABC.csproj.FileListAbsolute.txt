@@ -132,3 +132,4 @@ C:\Users\Paulo\OneDrive\Escritorio\Proyectos\PruebaTecnica\Backend\BackendSeguro
 C:\Users\Paulo\OneDrive\Escritorio\Proyectos\PruebaTecnica\Backend\BackendSegurosABC\BackendSegurosABC\obj\Debug\net8.0\BackendSegurosABC.pdb
 C:\Users\Paulo\OneDrive\Escritorio\Proyectos\PruebaTecnica\Backend\BackendSegurosABC\BackendSegurosABC\obj\Debug\net8.0\BackendSegurosABC.genruntimeconfig.cache
 C:\Users\Paulo\OneDrive\Escritorio\Proyectos\PruebaTecnica\Backend\BackendSegurosABC\BackendSegurosABC\obj\Debug\net8.0\ref\BackendSegurosABC.dll
+C:\Users\Paulo\OneDrive\Escritorio\Proyectos\PruebaTecnica\Backend\BackendSegurosABC\BackendSegurosABC\obj\Debug\net8.0\BackendSegurosABC.sourcelink.json
