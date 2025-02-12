@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BackendSegurosABC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e26dfcdf746f88de3f00b8bd90d2d1b9c1ab5612")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+96fa3c481e2405423a24027514f0fd86939a07bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("BackendSegurosABC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BackendSegurosABC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+//Configuración de la bd local
 namespace BackendSegurosABC
 {
     public class ApplicationDbContext : DbContext

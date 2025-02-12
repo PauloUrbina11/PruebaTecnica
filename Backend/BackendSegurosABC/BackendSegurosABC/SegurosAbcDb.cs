@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackendSegurosABC
 {
+    // Definición de la clase de SegurosAbc
     public class SegurosAbc
     {
         public int Id { get; set; }
