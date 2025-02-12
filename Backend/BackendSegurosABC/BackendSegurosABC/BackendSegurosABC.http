@@ -1,0 +1,6 @@
+@BackendSegurosABC_HostAddress = http://localhost:5016
+
+GET {{BackendSegurosABC_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
