@@ -1,29 +1,27 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { Title } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [AppComponent],
-    }).compileComponents();
+  let fixture: ComponentFixture<AppComponent>;
+  let titleService: Title;
+  
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [AppComponent],
+      providers: [Title]
+    });
+    
+    fixture = TestBed.createComponent(AppComponent);
+    titleService = TestBed.inject(Title);
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have the 'FrontendSegurosABC' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('FrontendSegurosABC');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  it('should change the title to "Seguros ABC"', () => {
+    spyOn(titleService, 'setTitle'); 
+    
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, FrontendSegurosABC');
+    
+    expect(titleService.setTitle).toHaveBeenCalledWith('Seguros ABC');
   });
 });
