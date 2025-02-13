@@ -8,5 +8,15 @@ namespace BackendSegurosABC
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<SegurosAbc> SegurosAbc { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SegurosAbc>()
+                .HasKey(s => s.Id);
+
+            modelBuilder.Entity<SegurosAbc>()
+                .Property(s => s.Id)
+                .ValueGeneratedOnAdd();
+        }
     }
 }

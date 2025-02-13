@@ -16,65 +16,164 @@ public class AseguradosController : ControllerBase
         _context = context;
     }
 
-    // GET: api/asegurados
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<SegurosAbc>>> GetAsegurados()
-    {
-        return await _context.SegurosAbc.ToListAsync();
-    }
-
-    // GET: api/asegurados/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<SegurosAbc>> GetAsegurado(int id)
-    {
-        var asegurado = await _context.SegurosAbc.FindAsync(id);
-
-        if (asegurado == null)
-        {
-            return NotFound();
-        }
-
-        return asegurado;
-    }
-
-    // POST: api/asegurados
-    [HttpPost]
+    // POST: api/asegurados/Crear_Asegurado: crea un asegurado
+    [HttpPost("Crear_Asegurado")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<SegurosAbc>> PostAsegurado(SegurosAbc asegurado)
     {
-        _context.SegurosAbc.Add(asegurado);
-        await _context.SaveChangesAsync();
-
-        return CreatedAtAction(nameof(GetAsegurado), new { id = asegurado.Id }, asegurado);
-    }
-
-    // PUT: api/asegurados/5
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutAsegurado(int id, SegurosAbc asegurado)
-    {
-        if (id != asegurado.Id)
+        if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest(ModelState); 
         }
 
-        _context.Entry(asegurado).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        try
+        {
+            var existingAsegurado = await _context.SegurosAbc
+                .FirstOrDefaultAsync(a => a.Identificacion == asegurado.Identificacion);
 
-        return NoContent();
+            if (existingAsegurado != null)
+            {
+                return Conflict("El asegurado con esta identificacion ya existe.");
+            }
+
+            _context.SegurosAbc.Add(asegurado);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetAsegurado), new { Identificacion = asegurado.Identificacion }, asegurado);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Hubo un problema al procesar la solicitud.");
+        }
     }
 
-    // DELETE: api/asegurados/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsegurado(int id)
+
+
+    // GET: api/asegurados: muestra la lista de asegurados
+    [HttpGet("Listar_Asegurados")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<SegurosAbc>>> GetAsegurados([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var asegurado = await _context.SegurosAbc.FindAsync(id);
+        var asegurados = await _context.SegurosAbc
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return Ok(new { total = _context.SegurosAbc.Count(), data = asegurados });
+    }
+
+    // PUT: api/asegurados: actualiza asegurado
+    [HttpPut("Actualizar_Asegurado/{Identificacion}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> PutAsegurado(int Identificacion, SegurosAbc asegurado)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState); 
+        }
+
+        var existingAsegurado = await _context.SegurosAbc
+            .FirstOrDefaultAsync(a => a.Identificacion == asegurado.Identificacion);
+
+        if (existingAsegurado == null)
+        {
+            return NotFound("El asegurado no existe."); 
+        }
+
+        if (Identificacion != asegurado.Identificacion)
+        {
+            return BadRequest("La identificación proporcionada no coincide con el del asegurado."); 
+        }
+
+        try
+        {
+            existingAsegurado.PrimerNombre = asegurado.PrimerNombre;
+            existingAsegurado.SegundoNombre = asegurado.SegundoNombre;
+            existingAsegurado.PrimerApellido = asegurado.PrimerApellido;
+            existingAsegurado.SegundoApellido = asegurado.SegundoApellido;
+            existingAsegurado.Telefono = asegurado.Telefono;
+            existingAsegurado.CorreoElectronico = asegurado.CorreoElectronico;
+            existingAsegurado.FechaNacimiento = asegurado.FechaNacimiento;
+            existingAsegurado.ValorEstimado = asegurado.ValorEstimado;
+            existingAsegurado.Observaciones = asegurado.Observaciones;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(asegurado);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Hubo un problema al procesar la solicitud. Detalles del error: {ex.Message}");
+        }
+    }
+
+
+
+    // DELETE: api/asegurados/Eliminar_Asegurados/{id}: eliminar asegurados
+    [HttpDelete("Eliminar_Asegurados/{Identificacion}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteAsegurado(int Identificacion)
+    {
+
+        var asegurado = await _context.SegurosAbc
+            .FirstOrDefaultAsync(a => a.Identificacion == Identificacion);
         if (asegurado == null)
         {
-            return NotFound();
+            return NotFound(new { message = "El asegurado no fue encontrado." });
         }
 
-        _context.SegurosAbc.Remove(asegurado);
-        await _context.SaveChangesAsync();
+        try
+        {
+            _context.SegurosAbc.Remove(asegurado);
+            await _context.SaveChangesAsync();
 
-        return NoContent();
+            return Ok(new { message = "El asegurado fue eliminado exitosamente." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                message = "Ocurrió un error al procesar la solicitud.",
+                detail = ex.Message
+            });
+        }
     }
+
+    // GET: api/asegurados: buscar asegurado por identificacion
+    [HttpGet("Filtrar_Asegurados/{Identificacion}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<SegurosAbc>> GetAsegurado(int Identificacion)
+    {
+        try
+        {
+            var asegurado = await _context.SegurosAbc.FirstOrDefaultAsync(a => a.Identificacion == Identificacion);
+
+            if (asegurado == null)
+            {
+                return NotFound(new { message = "El asegurado no fue encontrado." });
+            }
+
+            return Ok(asegurado);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new
+            {
+                message = "Ocurrió un error al procesar la solicitud.",
+                detail = ex.Message
+            });
+        }
+    }
+
+
 }
