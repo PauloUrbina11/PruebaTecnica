@@ -1,1 +1,47 @@
-<p>gestion-asegurado works!</p>
+<div class="container">
+    <div class="search-bar">
+      <input
+        type="text"
+        [(ngModel)]="filtroIdentificacion"
+        placeholder="Buscar por número de identificación"
+        (input)="onFiltroChange(filtroIdentificacion)"
+      />
+    </div>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Identificación</th>
+          <th>Primer Nombre</th>
+          <th>Segundo Nombre</th>
+          <th>Primer Apellido</th>
+          <th>Segundo Apellido</th>
+          <th>Teléfono</th>
+          <th>Correo Electrónico</th>
+          <th>Fecha de Nacimiento</th>
+          <th>Valor Estimado</th>
+          <th>Observaciones</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let asegurado of aseguradosFiltrados">
+          <td>{{ asegurado.identificacion }}</td>
+          <td><input [(ngModel)]="asegurado.primerNombre" /></td>
+          <td><input [(ngModel)]="asegurado.segundoNombre" /></td>
+          <td><input [(ngModel)]="asegurado.primerApellido" /></td>
+          <td><input [(ngModel)]="asegurado.segundoApellido" /></td>
+          <td><input [(ngModel)]="asegurado.telefono" /></td>
+          <td><input [(ngModel)]="asegurado.correoElectronico" type="email" /></td>
+          <td><input [(ngModel)]="asegurado.fechaNacimiento" type="date" /></td>
+          <td><input [(ngModel)]="asegurado.valorEstimado" type="number" /></td>
+          <td><textarea [(ngModel)]="asegurado.observaciones" class="input-text-extenso"></textarea></td>
+          <td>
+            <button (click)="editarAsegurado(asegurado)">Guardar Cambios</button>
+            <button (click)="eliminarAsegurado(asegurado.identificacion)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

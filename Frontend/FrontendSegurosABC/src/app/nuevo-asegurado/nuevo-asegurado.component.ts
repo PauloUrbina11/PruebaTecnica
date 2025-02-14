@@ -37,18 +37,14 @@ export class NuevoAseguradoComponent {
   onSubmit() {
     this.aseguradosService.apiAseguradosCrearAseguradoPost(this.asegurado).subscribe(
       (response) => {
-        // Registro exitoso
         alert('Asegurado registrado exitosamente');
         this.mostrarFormulario = false;
         this.router.navigate(['/']);
       },
       (error) => {
-        // Manejo de errores
         if (error.error && error.error.message) {
-          // Mostrar el mensaje de error que viene de la API
           alert(`Error: ${error.error.message}`);
         } else {
-          // Mensaje genérico si no hay un mensaje específico
           alert('Hubo un error al registrar el asegurado. Por favor, inténtelo de nuevo más tarde.');
         }
       }
